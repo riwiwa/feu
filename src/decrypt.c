@@ -7,7 +7,7 @@ int main(int argc, char *argv[])
 {
   if(argc != 3)
   {
-    printf("ERROR: Specify an encrypted file along with a key (./decrypt [ENCRYPTED FILE] [KEY])");
+    printf("ERROR: Specify an encrypted file along with a key (./decrypt [ENCRYPTED FILE] [KEY])\n");
   }
 
   // Open files for IO and check if they are accessible
@@ -16,11 +16,11 @@ int main(int argc, char *argv[])
 
   if(encrypted == NULL)
   {
-    printf("ERROR: Cannot access specified encrypted file"); 
+    printf("ERROR: Cannot access specified encrypted file\n"); 
   }
   if(key == NULL)
   {
-    printf("ERROR: Cannot access specified key file"); 
+    printf("ERROR: Cannot access specified key file\n"); 
   }
 
   FILE *decrypted = fopen("decrypted","w+");
