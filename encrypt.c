@@ -32,12 +32,12 @@ int main(int argc, char *argv[])
   FILE *out;
 
 
-  // Check if a name was given for the output file, if not, create a file
+  // Check if a name was given for the encrypted output file, if not, create a file
   if(argc == 3)
   {
     out = fopen(argv[2], "w+");
   } else {
-    out = fopen("output", "w+");
+    out = fopen("encrypted", "w+");
   }
 
   encrypt(in, out, key);
@@ -52,9 +52,10 @@ int main(int argc, char *argv[])
 void encrypt(FILE *input, FILE *encrypted, FILE *key)
 {
   int ch;
+  FILE *urandom = fopen("/dev/urandom", "r");
   while((ch = fgetc(input)) != EOF)
   {
-    int key_ch = rand();
+    int key_ch = fgetc(urandom);
     int encrypted_ch = ch ^ key_ch;
     fputc(encrypted_ch, encrypted);
     fputc(key_ch, key);
