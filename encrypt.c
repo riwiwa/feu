@@ -19,25 +19,25 @@ int main(int argc, char *argv[])
     return 0;
   }
 
-  // Initialize variables
-  FILE *in, *out, *key;
+  // Initialize variables and open files for IO
+  FILE *in = fopen(argv[1], "r");
 
-  // Open input file for reading
-  in = fopen(argv[1], "r");
-
-  // Check if a name was given for the output file
-  if(argc == 3)
-  {
-    out = fopen(argv[2], "w");
-  } else {
-    out = fopen("output", "w");
-  }
-
-  // Check if input file is there
   if(in == NULL)
   {
     printf("Error while opening file\n");
     exit(1);
+  }
+
+  FILE *key = fopen("key","w+");
+  FILE *out;
+
+
+  // Check if a name was given for the output file, if not, create a file
+  if(argc == 3)
+  {
+    out = fopen(argv[2], "w+");
+  } else {
+    out = fopen("output", "w+");
   }
 
   encrypt(in, out, key);
@@ -45,20 +45,18 @@ int main(int argc, char *argv[])
   // Cleanup and exit
   fclose(in);
   fclose(out);
-  //fclose(key);
+  fclose(key);
   return 0;
 }
 
 void encrypt(FILE *input, FILE *encrypted, FILE *key)
 {
   int ch;
-
-  // TODO: encrypt each character
-  while(ch != EOF)
+  while((ch = fgetc(input)) != EOF)
   {
-    // read each character from the input
-    ch = fgetc(input);
-    // store current indexed character to output
-    putc(ch, encrypted);
+    int key_ch = rand();
+    int encrypted_ch = ch ^ key_ch;
+    fputc(encrypted_ch, encrypted);
+    fputc(key_ch, key);
   }
 }
