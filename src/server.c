@@ -39,18 +39,25 @@ int main(void)
   }
 
   client_addr_size = sizeof(client_addr);
+  FILE *client_file = fopen("client_file", "w+");
+  int client_ch;
+  printf("Waiting for client\n");
+  client_fd = accept(socket_fd, (struct sockaddr *) &client_addr, &client_addr_size);
+  printf("Client connected!\n");
+  if(client_fd == -1)
+  {
+    handle_error("accept");
+  }
   while(1)
   {
-    FILE *client_file = fopen("client_file", "w+");
-    printf("waiting for client\n");
-    client_fd = accept(socket_fd, (struct sockaddr *) &client_addr, &client_addr_size);
-    printf("client connected!\n");
-    if(client_fd == -1)
+    
+    if((recv(client_fd, &client_ch, MAX_FILE_SIZE, 0)) <= 0)
     {
-      handle_error("accept");
+      break;
     }
-    recv(client_fd, client_file, MAX_FILE_SIZE, 0); 
+    fputc(client_ch, client_file);
   }
+  printf("File recieved\n");
  
   if(close(socket_fd) == -1)
   {

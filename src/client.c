@@ -41,7 +41,21 @@ int main(int argc, char *argv[])
     handle_error("connect");
   }
 
-  send(server_fd, file, sizeof(file), 0);
+  int ch;
+  while(ch != EOF)
+  {
+    ch = fgetc(file);
+    if((send(server_fd, &ch, sizeof(ch), 0)) <= 0)
+    {
+      break;
+    }
+    // TODO: find better way to sync send() and recv() between server and client
+    sleep(0.8);
+  }
+  ch = fgetc(file);
+  send(server_fd, &ch, sizeof(ch), 0);
+
+  printf("File sent!\n");
  
   if(close(server_fd) == -1)
   {
