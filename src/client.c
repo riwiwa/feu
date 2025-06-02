@@ -41,19 +41,29 @@ int main(int argc, char *argv[])
     handle_error("connect");
   }
 
-  int ch;
-  while(ch != EOF)
+  char *buf = 0;
+  long len;
+  int ack;
+
+  fseek(file, 0, SEEK_END);
+  len = ftell(file);
+  fseek(file, 0, SEEK_SET);
+  buf = malloc(len);
+
+  char c[len];
+
+  fread(buf, 1, len, file);
+  
+  strcpy(c, buf);
+  for(int i = 0; i < len; i++)
   {
-    ch = fgetc(file);
-    if((send(server_fd, &ch, sizeof(ch), 0)) <= 0)
+    send(server_fd, &c[i], sizeof(c[i]), 0);
+    recv(server_fd, &ack, 500, 0);
+    if(ack != 1)
     {
       break;
     }
-    // TODO: find better way to sync send() and recv() between server and client
-    sleep(0.8);
   }
-  ch = fgetc(file);
-  send(server_fd, &ch, sizeof(ch), 0);
 
   printf("File sent!\n");
  

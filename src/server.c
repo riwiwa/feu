@@ -48,6 +48,7 @@ int main(void)
   {
     handle_error("accept");
   }
+  int ack = 1;
   while(1)
   {
     
@@ -56,6 +57,7 @@ int main(void)
       break;
     }
     fputc(client_ch, client_file);
+    send(client_fd, &ack, sizeof(ack), 0);
   }
   printf("File recieved\n");
  
